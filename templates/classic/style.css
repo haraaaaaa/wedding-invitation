@@ -1,1 +1,5 @@
-/* classic style.css placeholder */
+
+.invitation { font-family: sans-serif; text-align: center; padding: 20px; }
+.profile { display: flex; justify-content: center; gap: 20px; }
+.avatar { width: 80px; height: 80px; border-radius: 50%; }
+.main-photo { width: 100%; max-width: 400px; border-radius: 10px; margin-bottom: 20px; }

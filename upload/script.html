@@ -1,1 +1,46 @@
-<!-- upload script.html placeholder -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>사진 업로드</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#f8f4f0] min-h-screen flex items-center justify-center">
+  <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md text-center">
+    <h1 class="text-xl font-bold mb-4 text-[#5a3e36]">📸 하객 사진 업로드</h1>
+    <input type="file" id="photoInput" accept="image/*" class="mb-4 w-full text-sm" />
+    <button id="uploadBtn" class="bg-[#5a3e36] text-white px-4 py-2 rounded-full hover:bg-[#3f2b24] transition">업로드</button>
+    <p id="status" class="mt-4 text-sm text-gray-600"></p>
+  </div>
+
+  <script>
+    const uploadUrl = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"; // 수정 필요
+    const input = document.getElementById('photoInput');
+    const status = document.getElementById('status');
+
+    document.getElementById('uploadBtn').addEventListener('click', async () => {
+      const file = input.files[0];
+      if (!file) return alert("파일을 선택해주세요!");
+
+      const reader = new FileReader();
+      reader.onload = async function () {
+        const base64 = reader.result;
+        const formData = new FormData();
+        formData.append("file", base64);
+        formData.append("name", file.name);
+
+        status.textContent = "업로드 중...";
+
+        try {
+          const res = await fetch(uploadUrl, { method: "POST", body: formData });
+          const text = await res.text();
+          status.textContent = text.includes("성공") ? "✅ 업로드 완료!" : "❌ 업로드 실패: " + text;
+        } catch (err) {
+          status.textContent = "⚠️ 오류 발생: " + err.message;
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>

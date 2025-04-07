@@ -1,1 +1,41 @@
-<!-- admin index.html placeholder -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>청첩장 설정</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#fdfaf6] min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white shadow-xl rounded-2xl w-full max-w-xl p-8">
+    <h1 class="text-2xl font-bold text-center mb-6 text-[#5a3e36]">청첩장 정보 입력</h1>
+    <form id="form" class="space-y-4">
+      <div><label class="block font-semibold mb-1">신랑 이름</label><input type="text" name="groomName" class="w-full border px-3 py-2 rounded" required></div>
+      <div><label class="block font-semibold mb-1">신부 이름</label><input type="text" name="brideName" class="w-full border px-3 py-2 rounded" required></div>
+      <div><label class="block font-semibold mb-1">예식 날짜</label><input type="date" name="weddingDate" class="w-full border px-3 py-2 rounded" required></div>
+      <div><label class="block font-semibold mb-1">예식 시간</label><input type="text" name="weddingTime" class="w-full border px-3 py-2 rounded"></div>
+      <div><label class="block font-semibold mb-1">예식 장소</label><input type="text" name="location" class="w-full border px-3 py-2 rounded"></div>
+      <div><label class="block font-semibold mb-1">대표 사진 URL</label><input type="text" name="photo" placeholder="assets/photos/main.jpg" class="w-full border px-3 py-2 rounded"></div>
+      <div><label class="block font-semibold mb-1">메시지</label><textarea name="message" class="w-full border px-3 py-2 rounded" rows="2"></textarea></div>
+      <div class="pt-4 text-center">
+        <button type="submit" class="bg-[#5a3e36] text-white px-6 py-2 rounded-full hover:bg-[#3f2b24] transition">저장하기</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    const form = document.getElementById("form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.template = "classic";
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "config.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>

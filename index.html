@@ -1,1 +1,62 @@
-<!-- index.html placeholder -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>모바일 청첩장</title>
+  <meta property="og:title" content="윤운영 ❤️ 오하라라 결혼식 초대장">
+  <meta property="og:description" content="2025년 11월 1일, 로얄파크컨벤션 파크홀에서 뵙겠습니다.">
+  <meta property="og:image" content="https://haraaaaaa.github.io/wedding-invitation/assets/photos/share-thumbnail.jpg">
+  <meta property="og:url" content="https://haraaaaaa.github.io/wedding-invitation/">
+  <link rel="stylesheet" href="templates/classic/style.css">
+</head>
+<body>
+  <div id="app">
+    청첩장 내용이 여기에 동적으로 로드됩니다.
+  </div>
+  <script>
+    async function render() {
+      const config = await fetch("config.json").then(r => r.json());
+      const template = await fetch("templates/classic/template.html").then(r => r.text());
+  
+      let result = template;
+      result = result
+        .replace(/{{groomName}}/g, config.profile.groom.name)
+        .replace(/{{brideName}}/g, config.profile.bride.name)
+        .replace(/{{groomDesc}}/g, config.profile.groom.desc)
+        .replace(/{{brideDesc}}/g, config.profile.bride.desc)
+        .replace(/{{groomPhoto}}/g, config.profile.groom.photo)
+        .replace(/{{bridePhoto}}/g, config.profile.bride.photo)
+        .replace(/{{weddingDate}}/g, config.weddingDate)
+        .replace(/{{weddingTime}}/g, config.weddingTime)
+        .replace(/{{location}}/g, config.location)
+        .replace(/{{photo}}/g, config.photo)
+        .replace(/{{message}}/g, config.message);
+  
+      const contactHTML = config.contacts.map(c =>
+        `<li>${c.role} ${c.name} · <a href="tel:${c.phone}">${c.phone}</a></li>`
+      ).join("");
+      result = result.replace(/{{contacts}}/g, contactHTML);
+  
+      const accountHTML = config.accounts.map(a =>
+        `<li>${a.type} ${a.name} · ${a.bank} ${a.account}</li>`
+      ).join("");
+      result = result.replace(/{{accounts}}/g, accountHTML);
+  
+      const galleryHTML = config.gallery.map(g =>
+        `<img src="${g}" class="gallery-img" />`
+      ).join("");
+      result = result.replace(/{{gallery}}/g, galleryHTML);
+  
+      const transport = config.transport;
+      result = result.replace(/{{subway}}/g, transport.subway)
+                     .replace(/{{bus}}/g, transport.bus)
+                     .replace(/{{parking}}/g, transport.parking)
+                     .replace(/{{shuttle}}/g, transport.shuttle);
+  
+      document.getElementById("app").innerHTML = result;
+    }
+  
+    render();
+  </script>  
+</body>
+</html>
